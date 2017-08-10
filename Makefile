@@ -2,8 +2,9 @@ PICO_LIBRARY = svoxpico/.libs/libttspico.a
 OPT_FLAG = -O2
 SHELL := /bin/bash
 LANG_DIR := /usr/share/picotts/lang
+DESTDIR := /
 
-all: pico
+all: pico2wave
 
 $(PICO_LIBRARY):
 	cd svoxpico; ./autogen.sh && ./configure && make
@@ -16,8 +17,12 @@ clean:
 clean_all: clean
 	cd svoxpico; make clean ; ./clean.sh
 
-pico: $(PICO_LIBRARY)
-	gcc -I. -I./svoxpico -Wall -g $(OPT_FLAG) -c -o pico2wave.o src/pico2wave.c
+pico2wave: $(PICO_LIBRARY)
+	gcc -I. -I./svoxpico -Wall -g $(OPT_FLAG) -Dpicolangdir=\"$(LANG_DIR)\" -c -o pico2wave.o src/pico2wave.c
 	gcc -I./svoxpico -Wall -g $(OPT_FLAG) pico2wave.o svoxpico/.libs/libttspico.a -o pico2wave -lm -lpopt
 
-install: pico
+install: pico2wave
+	mkdir -p $(DESTDIR)/usr/bin
+	mkdir -p $(DESTDIR)$(LANG_DIR)
+	cp -p pico2wave $(DESTDIR)/usr/bin
+	cp -a lang/* $(DESTDIR)$(LANG_DIR)
