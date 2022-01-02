@@ -15,6 +15,14 @@ BuildRequires: gcc-c++ python libtool popt-devel
 %description
 SVOX PicoTTS speech synthesizer.
 
+PackageName: PicoTTS
+Type: console-application
+Custom:
+  Repo: https://github.com/sailfishos-chum/picotts
+Categories:
+  - Utility
+  - Accessibility
+
 %prep
 %setup -q 
 
